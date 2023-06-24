@@ -1,37 +1,35 @@
-from os import listdir, path
+import os
 
 from .file_reader import ModpackFile
 from .mod_downloader import HttpSession
 
 
-def _search_for_modpack():
+def search_for_modpack() -> str:
+    """Utility function to search for a modpack"""
     possible_modpacks = []
-
     idx = 1
 
-    for file in listdir():
+    for file in os.listdir():
         if file.endswith(".zip"):
             possible_modpacks.append(file)
             print(f"{idx}: {file}")
             idx += 1
 
-    if len(possible_modpacks) == 0:
+    if not possible_modpacks:
         print("No modpacks found, enter the path to the modpack zip file.")
 
         while True:
             file_path = input("File path: ")
 
-            if path.isfile(file_path):
-                ext = path.splitext(file_path)[-1].lower()
-                if ext == ".zip":
-                    return file_path
+            if os.path.isfile(file_path) and file_path.lower().endswith(".zip"):
+                return file_path
 
             print("Please enter a valid path to a zip file.")
 
     while True:
         try:
             choice = int(input("Which modpack would you like to download? "))
-            if choice in range(1, len(possible_modpacks) + 1):
+            if 1 <= choice <= len(possible_modpacks):
                 return possible_modpacks[choice - 1]
             print(f"Please enter a number between 1 and {len(possible_modpacks)}.")
 
@@ -41,9 +39,8 @@ def _search_for_modpack():
 
 class ModpackDownloader:
     def __init__(self, api_key: str):
-        if api_key is None:
-            raise ValueError("API key cannot be None.")
-
+        if not api_key:
+            raise ValueError("API key cannot be empty.")
         self.api_key = api_key
 
     def download_modpack(self, file_path: str = None, output_dir: str = "downloaded_modpacks") -> None:
@@ -52,10 +49,9 @@ class ModpackDownloader:
         Args:
             file_path (str): The path to the zip file.
             output_dir (str, optional): The directory to download the mods to. Defaults to "downloaded_modpacks".
-
         """
         if file_path is None:
-            file_path = _search_for_modpack()
+            file_path = search_for_modpack()
 
         modpack = ModpackFile(file_path, output_dir)
         modpack.unzip_and_extract()
