@@ -92,5 +92,3 @@ class ModpackFile:
             file_ids.append(mod["fileID"])
 
         return project_ids, file_ids
-
-

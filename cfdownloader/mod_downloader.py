@@ -1,7 +1,9 @@
-from os import path, makedirs
 from asyncio import get_event_loop, gather
-from aiohttp import ClientSession, ClientResponse
+from os import path, makedirs
 from typing import Optional, List
+
+from aiohttp import ClientSession, ClientResponse
+
 
 class HttpSession:
     """Class for handling HTTP requests."""
@@ -79,7 +81,8 @@ class HttpSession:
             mod_data = mod["data"]
 
             if mod_data["isAvailable"] is False:
-                print(f"Mod \"{mod_data['fileName']}\" is unavailable on curseforge and may be outdated. Recommend downloading manually.")
+                print(
+                    f"Mod \"{mod_data['fileName']}\" is unavailable on curseforge and may be outdated. Recommend downloading manually.")
 
             url = mod_data["downloadUrl"]
 
