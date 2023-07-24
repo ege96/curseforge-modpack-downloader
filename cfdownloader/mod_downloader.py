@@ -30,6 +30,7 @@ class HttpSession:
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.loop.run_until_complete(self._close())
+        self.loop.close()
 
     async def _close(self) -> None:
         """Closes the session."""
